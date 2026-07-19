@@ -521,7 +521,7 @@ def health():
 
         "backend": "FastAPI",
 
-        "database": "SQLite",
+        "database": "PostgreSQL (Railway)",
 
         "version": "2.0"
 

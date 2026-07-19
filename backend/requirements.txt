@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+python-dotenv
+python-multipart
+python-jose
+passlib[bcrypt]
+geopy
+Pillow
+piexif
+exifread
+fastapi-mail
+email-validator
