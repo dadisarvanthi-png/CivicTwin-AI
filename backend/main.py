@@ -10,7 +10,7 @@ from fastapi import (
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from sqlalchemy.orm import Session 
+from sqlalchemy.orm import Session
 from utils.email_service import send_status_email
 
 import shutil
@@ -30,9 +30,7 @@ from utils.geocoder import get_coordinates
 from utils.gps_extractor import get_gps
 from utils.priority_predictor import predict_priority
 
-from auth import (
-    create_access_token,
-)
+from auth import create_access_token
 
 
 # =====================================
@@ -44,7 +42,6 @@ app = FastAPI(
     version="2.0"
 )
 
-
 # =====================================
 # CORS CONFIGURATION
 # =====================================
@@ -55,21 +52,23 @@ app.add_middleware(
         "http://localhost:5173",
         "http://127.0.0.1:5173",
         "http://localhost:5174",
+
+        # Your Vercel frontend
+        "https://civic-twin-ai-tawny.vercel.app",
+
+        # Optional: old Vercel deployment
+        "https://civic-twin-mq6wal06j-html9.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
 # =====================================
 # UPLOAD FILE CONFIGURATION
 # =====================================
 
-os.makedirs(
-    "uploads",
-    exist_ok=True
-)
+os.makedirs("uploads", exist_ok=True)
 
 app.mount(
     "/uploads",
@@ -77,194 +76,13 @@ app.mount(
     name="uploads"
 )
 
-
 # =====================================
 # DATABASE
 # =====================================
 
-Base.metadata.create_all(
-    bind=engine
-)
+Base.metadata.create_all(bind=engine)
 
-
-# =====================================
-# DATABASE SESSION
-# =====================================
-
-def get_db():
-
-    db = SessionLocal()
-
-    try:
-        yield db
-
-    finally:
-        db.close()
-
-
-
-# =====================================
-# HOME
-# =====================================
-
-@app.get("/")
-def home():
-
-    return {
-        "message": "Welcome to CivicTwin AI Backend"
-    }
-
-
-
-# =====================================
-# ADMIN LOGIN
-# =====================================
-
-@app.post("/login")
-def login(
-    username: str = Form(...),
-    password: str = Form(...),
-):
-
-    if username == "admin" and password == "admin123":
-
-        token = create_access_token(
-            {
-                "username": username
-            }
-        )
-
-        return {
-            "access_token": token,
-            "token_type": "bearer"
-        }
-
-
-    raise HTTPException(
-        status_code=401,
-        detail="Invalid Credentials"
-    )
-
-
-
-# =====================================
-# CREATE COMPLAINT
-# =====================================
-
-@app.post(
-    "/complaints",
-    response_model=schemas.ComplaintResponse
-)
-def create_complaint(
-    name: str = Form(...),
-    email: str = Form(...),
-    location: str = Form(...),
-    category: str = Form(...),
-    description: str = Form(...),
-    priority: str = Form(None),
-    status: str = Form("Pending"),
-    image: UploadFile = File(None),
-    db: Session = Depends(get_db),
-):
-
-    image_name = None
-
-    latitude = None
-    longitude = None
-
-
-    # AI Priority Prediction
-
-    if not priority:
-
-        priority = predict_priority(
-            description
-        )
-
-
-    # Save Image
-
-    if image:
-
-        image_name = image.filename
-
-        file_path = os.path.join(
-            "uploads",
-            image_name
-        )
-
-
-        with open(
-            file_path,
-            "wb"
-        ) as buffer:
-
-            shutil.copyfileobj(
-                image.file,
-                buffer
-            )
-
-
-        photo_lat, photo_lon = get_gps(
-            file_path
-        )
-
-
-        if photo_lat:
-
-            latitude = photo_lat
-            longitude = photo_lon
-
-
-
-    # Location Coordinates
-
-    if latitude is None:
-
-        geo_lat, geo_lon = get_coordinates(
-            location
-        )
-
-
-        if geo_lat:
-
-            latitude = geo_lat
-            longitude = geo_lon
-
-
-
-    complaint_data = {
-
-        "name": name,
-
-        "email": email,
-
-        "location": location,
-
-        "category": category,
-
-        "description": description,
-
-        "priority": priority,
-
-        "status": status,
-
-        "latitude": latitude,
-
-        "longitude": longitude,
-
-    }
-
-
-
-    return crud.create_complaint(
-        db=db,
-        complaint_data=complaint_data,
-        image_name=image_name
-    )
-
-
-
+# Rest of your code...
 # =====================================
 # GET ALL COMPLAINTS
 # =====================================
