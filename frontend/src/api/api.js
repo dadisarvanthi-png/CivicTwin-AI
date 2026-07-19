@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "civictwin-ai-production.up.railway.app",
+  baseURL: "https://civictwin-ai-backend.onrender.com",
 });
 
 export default api;
