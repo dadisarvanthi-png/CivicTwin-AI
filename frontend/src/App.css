@@ -632,7 +632,7 @@ body.dark li,
 body.dark td,
 body.dark th,
 body.dark label {
-  color: white;
+  color:white;
 }
 
 body.dark input,
@@ -866,4 +866,51 @@ font-size:18px;
 
 margin:15px;
 
+}
+/* ===========================
+   LEAFLET POPUP FIX
+=========================== */
+
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #111827 !important;
+}
+
+.leaflet-popup-content {
+  color: #111827 !important;
+}
+
+.leaflet-popup-content h1,
+.leaflet-popup-content h2,
+.leaflet-popup-content h3,
+.leaflet-popup-content h4,
+.leaflet-popup-content h5,
+.leaflet-popup-content h6,
+.leaflet-popup-content p,
+.leaflet-popup-content b,
+.leaflet-popup-content span,
+.leaflet-popup-content div {
+  color: #111827 !important;
+}
+
+body.dark .leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+}
+
+body.dark .leaflet-popup-content,
+body.dark .leaflet-popup-content h1,
+body.dark .leaflet-popup-content h2,
+body.dark .leaflet-popup-content h3,
+body.dark .leaflet-popup-content h4,
+body.dark .leaflet-popup-content h5,
+body.dark .leaflet-popup-content h6,
+body.dark .leaflet-popup-content p,
+body.dark .leaflet-popup-content b,
+body.dark .leaflet-popup-content span,
+body.dark .leaflet-popup-content div {
+  color: #111827 !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
 }
