@@ -13,7 +13,7 @@ function ComplaintModal({ complaint, onClose }) {
 
         {complaint.image && (
           <img
-            src={`http://127.0.0.1:8000/uploads/${complaint.image}`}
+            src={`https://civictwin-ai-backend.onrender.com/uploads/${complaint.image}`}
             alt="Complaint"
             className="modal-image"
           />

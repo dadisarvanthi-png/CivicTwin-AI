@@ -51,7 +51,7 @@ function MapPage() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await axios.get("http://127.0.0.1:8000/complaints");
+      const res = await axios.get("https://civictwin-ai-backend.onrender.com/complaints");
 
       const validComplaints = res.data.filter(
         (item) =>
@@ -130,7 +130,7 @@ function MapPage() {
 
               {item.image && (
                 <img
-                  src={`http://127.0.0.1:8000/uploads/${item.image}`}
+                  src={`https://civictwin-ai-backend.onrender.com/uploads/${item.image}`}
                   alt="Complaint"
                   style={{
                     width: "220px",

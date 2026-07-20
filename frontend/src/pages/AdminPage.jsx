@@ -585,7 +585,7 @@ item.image ?
 
 <img
 
-src={`http://127.0.0.1:8000/uploads/${item.image}`}
+src={`https://civictwin-ai-backend.onrender.com/uploads/${item.image}`}
 
 width="80"
 
