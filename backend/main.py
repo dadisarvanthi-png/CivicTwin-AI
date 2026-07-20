@@ -53,11 +53,8 @@ app.add_middleware(
         "http://127.0.0.1:5173",
         "http://localhost:5174",
 
-        # Your Vercel frontend
+        # Production frontend
         "https://civic-twin-ai-tawny.vercel.app",
-
-        # Optional: old Vercel deployment
-        "https://civic-twin-mq6wal06j-html9.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
