@@ -7,16 +7,26 @@ import models
 # =====================================
 # CREATE COMPLAINT
 # =====================================
+from sqlalchemy.orm import Session
+import models
+
 
 def create_complaint(
     db: Session,
     complaint_data: dict,
-    image_name: str = None
+    image_name: str = None,
 ):
-
     complaint = models.Complaint(
-        **complaint_data,
-        image=image_name
+        name=complaint_data["name"],
+        email=complaint_data["email"],
+        location=complaint_data["location"],
+        category=complaint_data["category"],
+        description=complaint_data["description"],
+        priority=complaint_data["priority"],
+        status=complaint_data["status"],
+        latitude=complaint_data["latitude"],
+        longitude=complaint_data["longitude"],
+        image=image_name,
     )
 
     db.add(complaint)

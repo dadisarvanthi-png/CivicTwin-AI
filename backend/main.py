@@ -23,7 +23,6 @@ import crud
 from database import (
     Base,
     engine,
-    SessionLocal,
     get_db,
 )
 
@@ -76,12 +75,39 @@ app.mount(
     StaticFiles(directory="uploads"),
     name="uploads"
 )
-
 # =====================================
 # DATABASE
 # =====================================
 
 Base.metadata.create_all(bind=engine)
+
+# =====================================
+# LOGIN
+# =====================================
+
+@app.post("/login")
+def login(
+    username: str = Form(...),
+    password: str = Form(...),
+):
+    if username == "admin" and password == "admin123":
+        token = create_access_token(
+            {"username": username}
+        )
+
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+        }
+
+    raise HTTPException(
+        status_code=401,
+        detail="Invalid username or password",
+    )
+
+# =====================================
+# CREATE COMPLAINT
+# =====================================
 
 @app.post(
     "/complaints",
@@ -98,6 +124,7 @@ def create_complaint(
     image: UploadFile = File(None),
     db: Session = Depends(get_db),
 ):
+
 
     image_name = None
     latitude = None

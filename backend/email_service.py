@@ -12,11 +12,11 @@ conf = ConnectionConfig(
 )
 
 async def send_status_email(email: str, status: str):
-
-    message = MessageSchema(
-        subject="CivicTwin AI - Complaint Status Updated",
-        recipients=[email],
-        body=f"""
+    try:
+        message = MessageSchema(
+            subject="CivicTwin AI - Complaint Status Updated",
+            recipients=[email],
+            body=f"""
 Hello,
 
 Your complaint status has been updated.
@@ -26,8 +26,14 @@ Current Status:
 
 Thank you for using CivicTwin AI.
 """,
-        subtype="plain",
-    )
+            subtype="plain",
+        )
 
-    fm = FastMail(conf)
-    await fm.send_message(message)
+        fm = FastMail(conf)
+        await fm.send_message(message)
+
+        print("✅ Email sent successfully")
+
+    except Exception as e:
+        print("❌ Email sending failed")
+        print(e)
