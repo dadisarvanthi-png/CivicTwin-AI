@@ -5,6 +5,7 @@ from datetime import datetime
 
 class ComplaintBase(BaseModel):
     name: str
+    email: str
     location: str
     category: str
     description: str
