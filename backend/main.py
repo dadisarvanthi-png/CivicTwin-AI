@@ -83,6 +83,70 @@ app.mount(
 
 Base.metadata.create_all(bind=engine)
 
+@app.post(
+    "/complaints",
+    response_model=schemas.ComplaintResponse,
+)
+def create_complaint(
+    name: str = Form(...),
+    email: str = Form(...),
+    location: str = Form(...),
+    category: str = Form(...),
+    description: str = Form(...),
+    priority: str = Form(None),
+    status: str = Form("Pending"),
+    image: UploadFile = File(None),
+    db: Session = Depends(get_db),
+):
+
+    image_name = None
+    latitude = None
+    longitude = None
+
+    # AI Priority
+    if not priority:
+        priority = predict_priority(description)
+
+    # Save uploaded image
+    if image:
+        image_name = image.filename
+
+        file_path = os.path.join("uploads", image_name)
+
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+
+        photo_lat, photo_lon = get_gps(file_path)
+
+        if photo_lat is not None:
+            latitude = photo_lat
+            longitude = photo_lon
+
+    # Get coordinates from location if GPS unavailable
+    if latitude is None:
+        geo_lat, geo_lon = get_coordinates(location)
+
+        if geo_lat is not None:
+            latitude = geo_lat
+            longitude = geo_lon
+
+    complaint_data = {
+        "name": name,
+        "email": email,
+        "location": location,
+        "category": category,
+        "description": description,
+        "priority": priority,
+        "status": status,
+        "latitude": latitude,
+        "longitude": longitude,
+    }
+
+    return crud.create_complaint(
+        db=db,
+        complaint_data=complaint_data,
+        image_name=image_name,
+    )
 # Rest of your code...
 # =====================================
 # GET ALL COMPLAINTS
