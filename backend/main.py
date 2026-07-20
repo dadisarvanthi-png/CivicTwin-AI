@@ -24,6 +24,7 @@ from database import (
     Base,
     engine,
     SessionLocal,
+    get_db,
 )
 
 from utils.geocoder import get_coordinates
@@ -160,7 +161,6 @@ def complaint_history(
     )
 
 
-
 # =====================================
 # UPDATE STATUS
 # =====================================
@@ -175,6 +175,8 @@ async def update_status(
     db: Session = Depends(get_db),
 ):
 
+    print("Updating complaint...")
+
     complaint = crud.update_status(
         db,
         complaint_id,
@@ -187,11 +189,18 @@ async def update_status(
             detail="Complaint not found",
         )
 
-    await send_status_email(
-        email=complaint.email,
-        name=complaint.name,
-        status=complaint.status,
-    )
+    print("Complaint updated")
+
+    try:
+        await send_status_email(
+            email=complaint.email,
+            status=complaint.status,
+        )
+        print("✅ Email sent successfully")
+
+    except Exception as e:
+        print("❌ Email sending failed")
+        print(e)
 
     return complaint
     
