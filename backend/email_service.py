@@ -11,8 +11,11 @@ conf = ConnectionConfig(
     USE_CREDENTIALS=True,
 )
 
-async def send_status_email(email: str, status: str):
-
+async def send_status_email(
+    name: str,
+    email: str,
+    status: str,
+):
     message = MessageSchema(
         subject="Complaint Status Updated",
         recipients=[email],

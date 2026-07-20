@@ -284,9 +284,10 @@ async def update_status(
 
     try:
         await send_status_email(
-            email=complaint.email,
-            status=complaint.status,
-        )
+    name=complaint.name,
+    email=complaint.email,
+    status=complaint.status,
+)
         print("✅ Email sent successfully")
 
     except Exception as e:
