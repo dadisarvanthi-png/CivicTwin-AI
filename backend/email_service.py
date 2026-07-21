@@ -4,34 +4,30 @@ conf = ConnectionConfig(
     MAIL_USERNAME="dadisarvanthi@gmail.com",
     MAIL_PASSWORD="nxvscxmvnjbvglrc",
     MAIL_FROM="dadisarvanthi@gmail.com",
-    MAIL_PORT=587,
     MAIL_SERVER="smtp.gmail.com",
-    MAIL_STARTTLS=True,
-    MAIL_SSL_TLS=False,
+    MAIL_PORT=465,
+    MAIL_SSL_TLS=True,
+    MAIL_STARTTLS=False,
     USE_CREDENTIALS=True,
 )
 
-async def send_status_email(
-    name: str,
-    email: str,
-    status: str,
-):
+async def send_status_email(name, email, status):
+
+    print("Function started")
+
     message = MessageSchema(
         subject="Complaint Status Updated",
         recipients=[email],
-        body=f"""
-Hello {name},
-
-Your complaint status has been updated.
-
-Current Status:
-{status}
-
-Thank you for using CivicTwin AI.
-""",
+        body=f"Hello {name}\nStatus: {status}",
         subtype="plain",
     )
 
+    print("Message created")
+
     fm = FastMail(conf)
 
+    print("Sending...")
+
     await fm.send_message(message)
+
+    print("SUCCESS")
